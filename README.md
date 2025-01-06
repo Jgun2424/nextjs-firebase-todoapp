@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Project Documentation
 
-## Getting Started
+## Step-by-Step Analysis
 
-First, run the development server:
+### Core Architecture
+- **Next.js 14** (App Router)
+- **Firebase Authentication**
+- **Firestore Database**
+- **Tailwind CSS** + **shadcn/ui**
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Key Features
+- **Task CRUD operations**
+- **User authentication**
+- **Real-time updates**
+- **Theme switching**
+- **Responsive design**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Dependencies
+A list of dependencies required for this project:
+- `next` (v14 or higher)
+- `react`
+- `firebase`
+- `tailwindcss`
+- `@shadcn/ui`
 
-## Learn More
+### Core Functionality
+1. **User Authentication**
+   - User sign-up and login via Firebase Authentication.
+   
+2. **Task Management**
+   - Create, edit, delete tasks.
+   - Mark tasks as complete.
 
-To learn more about Next.js, take a look at the following resources:
+3. **Real-time Updates**
+   - Changes in tasks reflect instantly across all connected clients via Firestore.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. **Theme Switching**
+   - Light and dark mode toggle for enhanced user experience.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+5. **Responsive Design**
+   - Mobile-first approach ensuring compatibility across devices.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Technical Implementation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### User Management
+- **Firebase Authentication**
+  - Handles user sign-up, login, and session management.
+
+### Data Persistence
+- **Firestore Database**
+  - Stores user tasks with real-time synchronization.
+
+### State Management
+- **React Context API**
+  - Centralized state management for user data and theme.
+
+### Routing
+- **Next.js App Router**
+  - Organizes pages and components for seamless navigation.
+
+### UI/Styling
+- **Tailwind CSS** + **shadcn/ui**
+  - Provides responsive and modern styling components.
+
+---
+
+## Environment Setup
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-repo/project.git
+   cd project
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Configure Firebase:
+   - Create a Firebase project.
+   - Enable Firestore and Firebase Authentication.
+   - Add your Firebase config to the `.env.local` file:
+     ```env
+     NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
+     NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+     NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+     NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+     NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+     ```
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## Deployment
+
+### Hosted on Vercel
+1. Link the repository to your Vercel account.
+2. Set environment variables in Vercel for Firebase configuration.
+3. Deploy the project directly from Vercel.
+
+---
+
+## Additional Notes
+- Ensure all environment variables are properly set for both local development and production.
+- Regularly update dependencies to keep the project secure and stable.
+
+---
+
+This documentation serves as a guide for developers and contributors to understand and work on the project efficiently.
