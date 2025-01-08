@@ -6,6 +6,7 @@ import { auth, db } from '@/firebase';
 import { arrayUnion, doc, setDoc, getDoc, updateDoc, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 interface AuthContextType {
     user: any;
@@ -216,41 +217,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
     }
 
-    const calculateTasksToBeCompletedToday = (user: any) => {
-        if (user) {
-            const taskList = user.data()?.taskList;
-            const today = new Date();
-            const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-            const todayEnd = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
-
-            taskList?.forEach(async (task: any) => {
-                const taskData = await getTasksData(task.id);
-                if (!taskData) return;
-                const tasks = taskData.tasks;
-                const tasksToBeCompletedToday = tasks.filter((task: any) => task.completeByTimestamp >= todayStart.getTime() && task.completeByTimestamp <= todayEnd.getTime());
-                const tasksToBeCompletedTodayCount = tasksToBeCompletedToday.length;
-
-                const user_doc = doc(db, 'users', user.uid);
-                await updateDoc(user_doc, {
-                    taskList: user.data()?.taskList?.map((t: any) => {
-                        if (t.id === task.id) {
-                            return { ...t, tasksToBeCompletedToday: tasksToBeCompletedTodayCount };
-                        } else {
-                            return t;
-                        }
-                    }),
-                });
-            });
-    }
-}
-
-
-    const login = (userData: any) => {
-        setUser(userData);
+    const login = async (userData: any) => {
+        try {
+            await signInWithEmailAndPassword(auth, userData.email, userData.password);
+            router.push('/');
+        } catch (error) {
+            toast.error('Unkown error signing in'); // incorrect email or password, but they'll never know heehheehhehehe
+            console.error('Error signing in: ', error); // those who know, will know...
+        }
     };
 
     const logout = () => {
-        setUser(null);
+        signOut(auth);
+        router.push('/auth/login');
     };
 
     useEffect(() => {
@@ -264,7 +243,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 try {
                     const userDoc = await getDoc(userDocRef);
                     setUserData(userDoc.data());
-                    calculateTasksToBeCompletedToday(user);
                 } catch (error) {
                     console.error("Error fetching user data: ", error);
                 } finally {
@@ -277,6 +255,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     
                 return () => unsubscribeSnapshot();
             } else {
+                router.push('/auth/register');
                 setUserData(null);
                 setLoading(false);
             }

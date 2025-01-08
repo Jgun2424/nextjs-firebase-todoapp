@@ -33,11 +33,14 @@ export default function CreateNewTask({ task_id, task_emoji }: { task_id: string
   const handleCreation = async () => {
     if (!title) return toast.error('Please enter a title for the task')
     if (!date)  return toast.error('Please select a completion date for the task')
-    if (!time)  return toast.error('Please select a completion time for the task')
 
-    const [hours, minutes] = time.split(':').map(Number);
     const completeByDate = new Date(date);
-    completeByDate.setHours(hours, minutes, 0, 0);
+    if (time) {
+      const [hours, minutes] = time.split(':').map(Number);
+      completeByDate.setHours(hours, minutes, 0, 0);
+    } else {
+      completeByDate.setHours(23, 59, 59, 999); 
+    }
 
     const taskData = {
         title: title,
@@ -90,7 +93,7 @@ export default function CreateNewTask({ task_id, task_emoji }: { task_id: string
                 </PopoverContent>
             </Popover>
             <div className='flex flex-col gap-1'>
-              <Label htmlFor='time'>Completion Time</Label>
+              <Label htmlFor='time'>Completion Time (not required)</Label>
               <Input id='time' type='time' required onChange={(e) => setTime(e.target.value)} />
             </div>
           </div>

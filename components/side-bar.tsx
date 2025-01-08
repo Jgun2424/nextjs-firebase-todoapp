@@ -25,7 +25,7 @@ import { Moon, Sun } from 'lucide-react';
 
 export default function SideBar() {
   const pathname = usePathname();
-  const { userData } = useAuth();
+  const { userData, logout } = useAuth();
   const { setTheme } = useTheme()
   const [taskList, setTaskList] = useState<any[]>([]);
 
@@ -54,18 +54,19 @@ export default function SideBar() {
         <div className='flex flex-col gap-1 relative justify-between flex-1 overflow-hidden'>
           <CustomScroll className='flex flex-col gap-1 relative' heightRelativeToParent='90%'>
             <div className='px-4 relative'>
-            {userData?.taskList?.map((task: any) => (
-              <Link href={`/task/${task.id}`} key={task.id}>
-                <div key={task.id} className={pathname === `/task/${task.id}` ? `flex justify-between items-center p-2 bg-secondary rounded-md` : `flex justify-between items-center p-2`}>
-                  <div className='flex items-center gap-1'>
-                    <span className='text-2xl'>{task.emoji}</span>
-                    <span className='font-semibold text-sm tracking-tight'>{task.title}</span>
-                  </div>
-                  <Badge variant="outline">{task.task_count}</Badge>
-                </div>
-              </Link>
-            ))}
-              <div className='sticky bottom-0 w-full bg-background mt-3'>
+              {userData?.taskList?.length === 0 && <p className='text-base text-gray-500 tracking-tight font-semibold'>You dont have any lists!</p>}
+              {userData?.taskList?.sort((a: any, b: any) => b.task_count - a.task_count).map((task: any) => (
+                  <Link href={`/task/${task.id}`} key={task.id}>
+                    <div key={task.id} className={pathname === `/task/${task.id}` ? `flex justify-between items-center p-2 bg-secondary rounded-md` : `flex justify-between items-center p-2`}>
+                    <div className='flex items-center gap-1'>
+                      <span className='text-2xl'>{task.emoji}</span>
+                      <span className='font-semibold text-sm tracking-tight'>{task.title}</span>
+                    </div>
+                    <Badge variant="outline">{task.task_count}</Badge>
+                    </div>
+                  </Link>
+                  ))}
+                  <div className='sticky bottom-0 w-full bg-background mt-3'>
                 <CreateNewList />
               </div>
             </div>
@@ -87,7 +88,7 @@ export default function SideBar() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end' side='top'>
               <DropdownMenuGroup>
-                <DropdownMenuItem>Logout</DropdownMenuItem>
+                <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
 
                 <DropdownMenuSeparator />
 
