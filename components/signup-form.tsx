@@ -32,18 +32,17 @@ export function SignUpForm({
     const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (password !== confirmPassword) {
+        if (password !== confirmPassword) { // we need to make sure the passwords match
             toast.error("Passwords do not match");
             return;
         }
 
         try {
-            createUser({ email, displayName, password });
-
-            toast.success("Account created successfully");
-            router.push("/");
+            createUser({ email, displayName, password }); // we handle the creation in the AuthContext
+            toast.success("Account created successfully"); // we show a success toast
+            router.push("/"); // we redirect the user to the home page, these could be done in the AuthContext as well...
         } catch (error) {
-            toast.error((error as Error).message);
+            toast.error((error as Error).message); // we show the error to the user, but this time not as a string, as an Error object, why? because we can!
         }
     }
 

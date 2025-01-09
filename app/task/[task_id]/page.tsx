@@ -65,23 +65,24 @@ export default function Page() {
   const [showAll, setShowAll] = React.useState<Checked>(true)
   const [filterDate, setFilterDate] = React.useState<Date | undefined>(new Date())
   const [calendarOpen, setCalendarOpen] = useState(false)
+  // pesky set up for the task page
 
   useEffect(() => {
-    if (task_id) {
+    if (task_id) { // If there's a task ID, fetch the data
       const id = task_id as string;
 
       const fetchData = async () => {
-        subscribeToTasks(id, (data) => {
-          setData(data);
+        subscribeToTasks(id, (data) => { // Subscribe to the task data, for real-time updates
+          setData(data); // Set the data
         });
       }
 
-      fetchData();
+      fetchData(); // call the function
     }
-  }, [task_id]);
+  }, [task_id]); // Run this effect if the task ID changes, kinda useless in this context but it's good practice
 
   useEffect(() => {
-    if (data) {
+    if (data) { // if there's data
       const completed = data?.tasks?.filter((task: any) => task.completed);
       const incomplete = data?.tasks?.filter((task: any) => !task.completed);
       const overdue = incomplete.filter((task: any) => moment(task.completeByTimestamp).isBefore(moment(), 'minute'));
@@ -94,17 +95,17 @@ export default function Page() {
       setIncompleteTasks(filteredIncomplete);
       setOverdueTasks(filteredOverdue);
 
-      if (showAll) {
+      // lots of filtering shinanigans, this is where the magic happens. Could it be optimized? Probably but it works
+
+      if (showAll) { // if showAll is true, show all tasks
         setIncompleteTasks(incomplete.filter((task: any) => !overdue.includes(task)).sort((a: any, b: any) => moment(a.completeByTimestamp).diff(moment(b.completeByTimestamp))));
-      } else {
+      } else { // if showAll is false, show only tasks that match the filterDate.
         setIncompleteTasks(filteredIncomplete);
       }
     }
-  }, [data, filterDate, showAll])
+  }, [data, filterDate, showAll]) // Run this effect if the data, filterDate or showAll changes. This is necessary for the filtering to work, unlike the previous useEffect
 
-  console.log(data);
-
-  if (!data) {
+  if (!data) { // should never happen but just in case
     return
   }
 

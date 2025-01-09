@@ -16,14 +16,14 @@ import { Card } from './ui/card';
 
 
 export default function RenderTaskCard({ task, task_id, parent_id }: RenderTaskCardProps) {
-    const { markTaskAsComplete } = useAuth();
-    const buttonRef = React.useRef<HTMLButtonElement>(null);
+    const { markTaskAsComplete } = useAuth(); // we need to mark the task as complete
+    const buttonRef = React.useRef<HTMLButtonElement>(null); // we need a ref to the button
 
-    const handleTaskCompletion = async (task_id: string, task_id_to_update: string) => {
+    const handleTaskCompletion = async (task_id: string, task_id_to_update: string) => { // we need to handle the task completion
         try {
-            markTaskAsComplete(task_id, task_id_to_update)
+            markTaskAsComplete(task_id, task_id_to_update) // we need to mark the task as complete
         } catch (error) {
-            toast.error(error as string)
+            toast.error(error as string) // if we get an error we show it to the user. as a string, of course. Thanks TypeScript again!
         }
     }
 

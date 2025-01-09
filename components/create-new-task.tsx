@@ -31,27 +31,27 @@ export default function CreateNewTask({ task_id, task_emoji }: { task_id: string
   const [calendarOpen, setCalendarOpen] = useState(false)
 
   const handleCreation = async () => {
-    if (!title) return toast.error('Please enter a title for the task')
-    if (!date)  return toast.error('Please select a completion date for the task')
+    if (!title) return toast.error('Please enter a title for the task') // we need a title for the task
+    if (!date)  return toast.error('Please select a completion date for the task') // we need a date for the task
 
-    const completeByDate = new Date(date);
-    if (time) {
+    const completeByDate = new Date(date); // we need to pass this data to the createNewTask function
+    if (time) { // if we have a time, we set the time
       const [hours, minutes] = time.split(':').map(Number);
       completeByDate.setHours(hours, minutes, 0, 0);
-    } else {
+    } else { // if we dont have a time, we set the time to the end of the day. Some people are lazy, okay?
       completeByDate.setHours(23, 59, 59, 999); 
     }
 
-    const taskData = {
+    const taskData = { // we need to pass this data to the createNewTask function
         title: title,
         completeByTimestamp: completeByDate.getTime(),
         emoji: task_emoji
     }
 
-    try {
+    try { // we try to create the task
       createNewTask(taskData, task_id) 
       setDialogOpen(false)
-    } catch (error) {
+    } catch (error) { // if we get an error we show it to the user. as a string, of course. Thanks TypeScript again!
       toast.error(error as string)
     }
   }

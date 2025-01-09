@@ -23,25 +23,25 @@ export default function CreateNewList() {
 
   const handleCreation = async () => {
 
-    if (!title) return toast.error('Please enter a title for the list')
+    if (!title) return toast.error('Please enter a title for the list') // we need a title for the list
 
     const listData = {
       title: title,
       emoji: emoji
-    }
+    } // we need to pass this data to the createNewList function
 
-    try {
+    try { // we try to create the list
       createNewList(listData)
       setTitle('')
       setEmoji('💪')
       setDialogOpen(false)
-    } catch (error) {
+    } catch (error) { // if we get an error we show it to the user. as a string, of course. Thanks TypeScript! 
       toast.error(error as string)
     }
   }
 
   return (
-    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}> 
       <DialogTrigger asChild>
         <Button variant='secondary' className='w-full'>Create New List</Button>
       </DialogTrigger>
