@@ -25,7 +25,7 @@ export default function SideBar() {
   const { userData, logout } = useAuth();
   const { setTheme } = useTheme()
 
-  if (pathname.includes('auth')) return;
+  if (pathname.includes('auth') || pathname.includes('landing')) return;
 
   if (!userData) {
     return <div>Loading...</div>;

@@ -245,7 +245,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     
                 return () => unsubscribeSnapshot(); // we return the unsubscribe function
             } else {
-                router.push('/auth/register'); // if the user is not authenticated, we redirect them to the register page
+                router.push('/landing'); // if the user is not authenticated, we redirect them to the register page
                 setUserData(null); // we set the user data to null
             }
         });
