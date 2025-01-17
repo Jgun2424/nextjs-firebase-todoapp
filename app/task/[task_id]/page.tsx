@@ -54,17 +54,37 @@ import { useRouter } from 'next/navigation';
 
 type Checked = DropdownMenuCheckboxItemProps["checked"]
 
+interface Task {
+  id: string;
+  title: string;
+  emoji: string;
+  completed: boolean;
+  completeByTimestamp: number;
+  completedAt: string;
+}
+
+interface TaskList {
+  id: string;
+  title: string;
+  emoji: string;
+  tasks: Task[];
+}
+
+interface TaskPageProps {
+  task_id: string;
+}
+
 export default function Page() {
   const { task_id } = useParams();
   const { subscribeToTasks, deleteList } = useAuth();
   const router = useRouter();
-  const [data, setData] = useState<any>(null);
-  const [completedTasks, setCompletedTasks] = useState<any[]>([]);
-  const [incompleteTasks, setIncompleteTasks] = useState<any[]>([]);
-  const [overdueTasks, setOverdueTasks] = useState<any[]>([]);
-  const [showAll, setShowAll] = React.useState<Checked>(true)
-  const [filterDate, setFilterDate] = React.useState<Date | undefined>(new Date())
-  const [calendarOpen, setCalendarOpen] = useState(false)
+  const [data, setData] = useState<TaskList | null>(null);
+  const [completedTasks, setCompletedTasks] = useState<Task[]>([]);
+  const [incompleteTasks, setIncompleteTasks] = useState<Task[]>([]);
+  const [overdueTasks, setOverdueTasks] = useState<Task[]>([]);
+  const [showAll, setShowAll] = React.useState<Checked>(true);
+  const [filterDate, setFilterDate] = React.useState<Date | undefined>(new Date());
+  const [calendarOpen, setCalendarOpen] = useState(false);
   // pesky set up for the task page
 
   useEffect(() => {
@@ -83,13 +103,13 @@ export default function Page() {
 
   useEffect(() => {
     if (data) { // if there's data
-      const completed = data?.tasks?.filter((task: any) => task.completed);
-      const incomplete = data?.tasks?.filter((task: any) => !task.completed);
-      const overdue = incomplete.filter((task: any) => moment(task.completeByTimestamp).isBefore(moment(), 'minute'));
+      const completed = data.tasks.filter((task: Task) => task.completed);
+      const incomplete = data.tasks.filter((task: Task) => !task.completed);
+      const overdue = incomplete.filter((task: Task) => moment(task.completeByTimestamp).isBefore(moment(), 'minute'));
 
-      const filteredCompleted = completed.sort((a: any, b: any) => moment(a.completedAt).diff(moment(b.completedAt)));
-      const filteredIncomplete = incomplete.filter((task: any) => !overdue.includes(task) && moment(task.completeByTimestamp).isSame(filterDate, 'day')).sort((a: any, b: any) => moment(a.completeByTimestamp).diff(moment(b.completeByTimestamp)));
-      const filteredOverdue = overdue.sort((a: any, b: any) => moment(a.completeByTimestamp).diff(moment(b.completeByTimestamp)));
+      const filteredCompleted = completed.sort((a: Task, b: Task) => moment(a.completedAt).diff(moment(b.completedAt)));
+      const filteredIncomplete = incomplete.filter((task: Task) => !overdue.includes(task) && moment(task.completeByTimestamp).isSame(filterDate, 'day')).sort((a: Task, b: Task) => moment(a.completeByTimestamp).diff(moment(b.completeByTimestamp)));
+      const filteredOverdue = overdue.sort((a: Task, b: Task) => moment(a.completeByTimestamp).diff(moment(b.completeByTimestamp)));
       
       setCompletedTasks(filteredCompleted);
       setIncompleteTasks(filteredIncomplete);
@@ -98,7 +118,7 @@ export default function Page() {
       // lots of filtering shinanigans, this is where the magic happens. Could it be optimized? Probably but it works
 
       if (showAll) { // if showAll is true, show all tasks
-        setIncompleteTasks(incomplete.filter((task: any) => !overdue.includes(task)).sort((a: any, b: any) => moment(a.completeByTimestamp).diff(moment(b.completeByTimestamp))));
+        setIncompleteTasks(incomplete.filter((task: Task) => !overdue.includes(task)).sort((a: Task, b: Task) => moment(a.completeByTimestamp).diff(moment(b.completeByTimestamp))));
       } else { // if showAll is false, show only tasks that match the filterDate.
         setIncompleteTasks(filteredIncomplete);
       }
@@ -106,7 +126,7 @@ export default function Page() {
   }, [data, filterDate, showAll]) // Run this effect if the data, filterDate or showAll changes. This is necessary for the filtering to work, unlike the previous useEffect
 
   if (!data) { // should never happen but just in case
-    return
+    return null;
   }
 
   return (
@@ -207,7 +227,7 @@ export default function Page() {
                   {incompleteTasks.length === 0 && (<p className='text-base text-gray-500 tracking-tight font-semibold'>Theres no tasks here!</p>)}
 
                   <CustomScroll heightRelativeToParent='100%'>
-                      {incompleteTasks.map((task: any) => (
+                      {incompleteTasks.map((task: Task) => (
                         <>
                          <RenderTaskCard task={task} task_id={task.id} parent_id={data?.id} />
                         </>
@@ -219,7 +239,7 @@ export default function Page() {
                   {completedTasks.length === 0 && (<p className='text-base text-gray-500 tracking-tight font-semibold'>Theres no tasks here!</p>)}
 
                   <CustomScroll heightRelativeToParent='100%'>
-                      {completedTasks.map((task: any) => (
+                      {completedTasks.map((task: Task) => (
                         <>
                          <RenderTaskCard task={task} task_id={task.id} parent_id={data?.id} />
                         </>
@@ -231,7 +251,7 @@ export default function Page() {
                   {overdueTasks.length === 0 && (<p className='text-base text-gray-500 tracking-tight font-semibold'>Nice job! You have no overdue tasks</p>)}
 
                   <CustomScroll heightRelativeToParent='100%'>
-                      {overdueTasks.map((task: any) => (
+                      {overdueTasks.map((task: Task) => (
                         <>
                          <RenderTaskCard task={task} task_id={task.id} parent_id={data?.id} />
                         </>
@@ -241,8 +261,6 @@ export default function Page() {
             </Tabs>
 
       </div>
-
-
 
       <div className='w-full mt-4'>
         <CreateNewTask task_id={data?.id} task_emoji={data?.emoji}/>

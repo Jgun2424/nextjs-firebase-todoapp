@@ -10,12 +10,31 @@ import RenderTaskCard from "@/components/render-task-card";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
+interface Task {
+  emoji: string;
+  id: string;
+  title: string;
+  description: string;
+  completed: boolean;
+  completeByTimestamp: number;
+  parentTaskId: string;
+}
+
+interface TaskList {
+  id: string;
+  title: string;
+  tasks: Task[];
+}
+
+interface UserData {
+  displayName: string;
+  taskList: TaskList[];
+}
 
 export default function Home() {
-
   const { user, userData, getTasksData } = useAuth();
-  const [todayTasks, setTodayTasks] = useState<any[]>([]);
-  const [upcomingTasks, setUpcomingTasks] = useState<any[]>([]);
+  const [todayTasks, setTodayTasks] = useState<Task[]>([]);
+  const [upcomingTasks, setUpcomingTasks] = useState<Task[]>([]);
 
   useEffect(() => {
     if (!user && !userData) {
@@ -24,15 +43,16 @@ export default function Home() {
       const fetchTasks = async () => {
         // Fetch tasks for each list
         const tasksData = await Promise.all(
-          userData?.taskList?.map(async (task: any) => {
+          userData?.taskList?.map(async (taskList: TaskList) => {
             // Skip if there's no valid ID
-            if (!task?.id) return null;
-            return await getTasksData(task.id);
+            if (!taskList?.id) return null;
+            return await getTasksData(taskList.id);
           }) || []
         );
 
         // Filter out invalid results
-        const validTasksData = tasksData.filter(Boolean);
+        const validTasksData = tasksData.filter(Boolean) as TaskList[];
+
         if (!validTasksData.length) return;
 
         // Flatten all tasks
@@ -41,27 +61,27 @@ export default function Home() {
         );
 
         // Grab incomplete tasks
-        const incompleteTasks = allTasks.filter((task: any) => !task.completed);
+        const incompleteTasks = allTasks.filter((task: Task) => !task.completed);
 
         // Overdue tasks
-        const overdueTasks = incompleteTasks.filter((task: any) =>
+        const overdueTasks = incompleteTasks.filter((task: Task) =>
           moment(task.completeByTimestamp).isBefore(moment(), "minute")
         );
 
         // Sort incomplete tasks by timestamp
         const sortedIncomplete = incompleteTasks
-          .filter((task: any) => !overdueTasks.includes(task))
-          .sort((a: any, b: any) =>
+          .filter((task: Task) => !overdueTasks.includes(task))
+          .sort((a: Task, b: Task) =>
             moment(a.completeByTimestamp).diff(moment(b.completeByTimestamp))
           );
 
         // Filter tasks due today
-        const sortedToday = sortedIncomplete.filter((task: any) =>
+        const sortedToday = sortedIncomplete.filter((task: Task) =>
           moment(task.completeByTimestamp).isSame(moment(), "day")
         );
 
         // Filter tasks that are upcoming
-        const sortedUpcoming = sortedIncomplete.filter((task: any) =>
+        const sortedUpcoming = sortedIncomplete.filter((task: Task) =>
           moment(task.completeByTimestamp).isAfter(moment(), "day")
         );
 
@@ -77,14 +97,12 @@ export default function Home() {
     return;
   }
 
-
   return (
     <div className="flex flex-col flex-1 px-20 py-14 max-h-screen overflow-hidden">
       <div>
         <h1 className="text-4xl font-bold">Hello, {userData.displayName}</h1>
         <p className="text-base text-gray-500 tracking-tight font-semibold">{new Date().toLocaleDateString('en-US', {weekday: 'long',year: 'numeric', month: 'long', day: 'numeric'})}</p>
         
-
         <div className="flex gap-4 mt-6 mb-2">
         <h1 className='text-2xl font-bold tracking-tight'>Task dashboard</h1>
         </div>
@@ -96,7 +114,7 @@ export default function Home() {
 
           <TabsContent value="today">
             <CustomScroll className="flex flex-col gap-4" heightRelativeToParent="80%">
-              {todayTasks.map((task: any) => (
+              {todayTasks.map((task: Task) => (
                 <Link href={`/task/${task.parentTaskId}`} key={task.id}>
                   <RenderTaskCard task={task} task_id={task.id} parent_id={task.parentTaskId} />
                 </Link>
@@ -105,10 +123,9 @@ export default function Home() {
             </CustomScroll>
           </TabsContent>
 
-
           <TabsContent value="upcoming">
             <CustomScroll className="flex flex-col gap-4" heightRelativeToParent="80%">
-              {upcomingTasks.map((task: any) => (
+              {upcomingTasks.map((task: Task) => (
                 <Link href={`/task/${task.parentTaskId}`} key={task.id}>
                   <RenderTaskCard task={task} task_id={task.id} parent_id={task.parentTaskId} />
                 </Link>

@@ -20,25 +20,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useTheme } from "next-themes"
-import { Moon, Sun } from 'lucide-react';
 
 
 export default function SideBar() {
   const pathname = usePathname();
   const { userData, logout } = useAuth();
   const { setTheme } = useTheme()
-  const [taskList, setTaskList] = useState<any[]>([]);
-
-  useEffect(() => {
-    // console.log(taskData);
-    // console.log(userData);
-
-    if (userData) {
-      console.log(userData);
-    }
-
-
-  }, [userData]);
 
   if (pathname.includes('auth')) return;
 
@@ -55,7 +42,7 @@ export default function SideBar() {
           <CustomScroll className='flex flex-col gap-1 relative' heightRelativeToParent='90%'>
             <div className='px-4 relative'>
               {userData?.taskList?.length === 0 && <p className='text-base text-gray-500 tracking-tight font-semibold'>You dont have any lists!</p>}
-              {userData?.taskList?.sort((a: any, b: any) => b.task_count - a.task_count).map((task: any) => (
+              {userData?.taskList?.sort((a: { task_count: number }, b: { task_count: number }) => b.task_count - a.task_count).map((task: { id: string, emoji: string, title: string, task_count: number }) => (
                   <Link href={`/task/${task.id}`} key={task.id}>
                     <div key={task.id} className={pathname === `/task/${task.id}` ? `flex justify-between items-center p-2 bg-secondary rounded-md` : `flex justify-between items-center p-2`}>
                     <div className='flex items-center gap-1'>

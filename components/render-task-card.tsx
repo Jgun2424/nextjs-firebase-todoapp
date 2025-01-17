@@ -1,8 +1,3 @@
-interface RenderTaskCardProps {
-    task: any,
-    task_id: string,
-    parent_id: string
-}
 
 import { useAuth } from '@/context/AuthContext';
 import React from 'react'
@@ -14,6 +9,16 @@ import { Trash } from 'lucide-react';
 import { Card } from './ui/card';
 
 
+interface RenderTaskCardProps {
+    task: {
+        emoji: string,
+        title: string,
+        completeByTimestamp: number,
+        completed: boolean,
+    },
+    task_id: string,
+    parent_id: string
+}
 
 export default function RenderTaskCard({ task, task_id, parent_id }: RenderTaskCardProps) {
     const { markTaskAsComplete } = useAuth(); // we need to mark the task as complete
