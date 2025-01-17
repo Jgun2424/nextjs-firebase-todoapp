@@ -12,7 +12,7 @@ export default function Page() {
           </h1>
           <p className="text-balance text-muted-foreground lg:text-lg">
             A task management app that helps you keep track of your tasks and
-            get things done. It's simple, easy to use, and free. This is a display of my ability to create a task management app using Next.js, Tailwind CSS, and Firebase.
+            get things done. Its simple, easy to use, and free. This is a display of my ability to create a task management app using Next.js, Tailwind CSS, and Firebase.
           </p>
         </div>
         <Link href="/auth/login">
