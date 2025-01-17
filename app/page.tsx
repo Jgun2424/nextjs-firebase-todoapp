@@ -25,11 +25,6 @@ interface TaskList {
   tasks: Task[];
 }
 
-interface UserData {
-  displayName: string;
-  taskList: TaskList[];
-}
-
 export default function Home() {
   const { user, userData, getTasksData } = useAuth();
   const [todayTasks, setTodayTasks] = useState<Task[]>([]);
