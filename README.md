@@ -2,7 +2,7 @@
 
 ## A modern task management application built with Next.js, Firebase, and Tailwind CSS.
 
-[Preview](nextjs-chat-vert-three-69.vercel.app)
+[Preview](https://nextjs-chat-vert-three-69.vercel.app)
 
 ### Features
 - 📝 Create and manage task lists
