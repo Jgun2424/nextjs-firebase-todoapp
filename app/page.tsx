@@ -1,7 +1,6 @@
 'use client';
 
 import { useAuth } from "@/context/AuthContext";
-import { Checkbox } from "@/components/ui/checkbox"
 import { CustomScroll } from "react-custom-scroll";
 import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

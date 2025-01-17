@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { Badge } from "@/components/ui/badge"
-import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { CustomScroll } from "react-custom-scroll";
 import { usePathname } from 'next/navigation';
@@ -15,7 +14,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"

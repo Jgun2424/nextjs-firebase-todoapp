@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
@@ -20,11 +19,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { Checkbox } from '@/components/ui/checkbox';
 import CreateNewTask from '@/components/create-new-task';
 import moment from 'moment';
 import { CalendarIcon, Filter, Trash  } from 'lucide-react';
-import { Separator } from "@/components/ui/separator"
 import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
@@ -68,10 +65,6 @@ interface TaskList {
   title: string;
   emoji: string;
   tasks: Task[];
-}
-
-interface TaskPageProps {
-  task_id: string;
 }
 
 export default function Page() {
