@@ -269,4 +269,4 @@ export const useAuth = () => { // we create a custom hook to use the AuthContext
         throw new Error('useAuth must be used within an AuthProvider');
     }
     return context;
-};b  n  
+};
